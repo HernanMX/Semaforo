@@ -14,7 +14,7 @@ float tiempo = 0; // variable para controlar el tiempo de duración del led verd
 boolean espera = false;
 
 void setup() {
-  //Definicion de los distintos componentes de 
+  //Defi|nicion de los distintos componentes de 
   //nuestro prototipo como entradas o salidas
   Serial.begin(9600);
   pinMode(led_v, OUTPUT);
@@ -32,7 +32,6 @@ void loop() {
   //conjunto con la variable tiempo para asignar el tiempo que durara 
   //el led verde del semaforo para los automoviles y el rojo de los peatones
     valorPot = analogRead(pot) * 5;
- // while (tiempo <= valorPot) {
     digitalWrite(led_v, HIGH);
     digitalWrite(led_pr, HIGH);
     if(espera){
@@ -46,10 +45,6 @@ void loop() {
       
     }
   tiempo = tiempo + 0.01;
-    
-
-  //}
-  
   
 }
 
