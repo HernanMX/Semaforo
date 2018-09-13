@@ -11,10 +11,12 @@ int valorPot = 0;  //variable la cual contendra el valor leido del potenciometro
 boolean valor_boton = HIGH; //variable para saber si el boton se ha presionado
 float tiempo = 0; // variable para controlar el tiempo de duración del led verde
 
+boolean espera = false;
+
 void setup() {
   //Definicion de los distintos componentes de 
   //nuestro prototipo como entradas o salidas
-  
+  Serial.begin(9600);
   pinMode(led_v, OUTPUT);
   pinMode(led_a, OUTPUT);
   pinMode(led_r, OUTPUT);
@@ -29,45 +31,26 @@ void loop() {
   //Leemos el valor de poteciometro, dicho valor sera utilizado en 
   //conjunto con la variable tiempo para asignar el tiempo que durara 
   //el led verde del semaforo para los automoviles y el rojo de los peatones
-  valorPot = analogRead(pot) * 3;
-  while (tiempo <= valorPot) {
+    valorPot = analogRead(pot) * 5;
+ // while (tiempo <= valorPot) {
     digitalWrite(led_v, HIGH);
     digitalWrite(led_pr, HIGH);
+    if(espera){
+      espera= false;
+      delay(5000);
+    } 
     valor_boton = digitalRead(btn); // guardamos el valor si el boton se presiona
-    while (valor_boton == LOW) { //Si el boton es presionado llamamos al metodo secuencia1() que es para iniciar la secuencia del semaforo peatonal.
+     Serial.println(tiempo);
+    while (valor_boton == LOW  || tiempo > valorPot) { //Si el boton es presionado llamamos al metodo secuencia1() que es para iniciar la secuencia del semaforo peatonal.
       secuencia1();
+      
     }
+  tiempo = tiempo + 0.01;
+    
 
-    tiempo = tiempo + 0.01;
-
-  }
-  tiempo = 0;
-  //Si el boton no es presionado sale del ciclo
-  //Entonces continua con la secuencia del semaforo automovilistico
-  // la cual es parpadea el led verde, pasa al amarillo,y encedemos el led rojo
-  // asi como apagamos el led rojo del peaton y encendemos el verde
-  digitalWrite(led_v, LOW);
-  delay(500);
-  digitalWrite(led_v, HIGH);
-  delay(500);
-  digitalWrite(led_v, LOW);
-  delay(500);
-  digitalWrite(led_v, HIGH);
-  delay(500);
-  digitalWrite(led_v, LOW);
-  delay(500);
-  digitalWrite(led_a, HIGH);
-  delay(1000);
-  digitalWrite(led_a, LOW);
-  digitalWrite(led_pr, LOW);
-  delay(1000);
-  beep();                //Reproducimos un sonido cuando el semaforo del peaton pasa a verde.
-  digitalWrite(led_r, HIGH);
-  digitalWrite(led_pe, HIGH);
-  delay(3000);
-  digitalWrite(led_r, LOW);
-  digitalWrite(led_pe, LOW);
-  delay(1000);
+  //}
+  
+  
 }
 
 void secuencia1() {
@@ -95,12 +78,13 @@ void secuencia1() {
   beep();  ////Reproducimos un sonido cuando el semaforo del peaton pasa a verde.
   digitalWrite(led_pe, HIGH);
   digitalWrite(led_r, HIGH);
-  delay(3000);
+  delay(valorPot);
   digitalWrite(led_r, LOW);
   digitalWrite(led_pe, LOW);
   delay(1000);
   valor_boton = HIGH;
-  valorPot = analogRead(pot) * 3;
+  valorPot = analogRead(pot) * 5;
+  espera = true;
 }
 
 
